@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- This tag tells mobile phones not to zoom out -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediRx - Generate Prescription</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+             font-family: 'Poppins', sans-serif;
+            /* Deep Purple to Light Pink Gradient */
+            background: linear-gradient(135deg, #2e1065 0%, #701a75 40%, #fbcfe8 100%);
+            background-size: cover;
+            background-attachment: fixed;
+            line-height: 1.6;
+            color: #111111;
+        }
+
+        /* CLEAR BACKGROUND IMAGE - FULL VISIBILITY */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* NAVBAR - CLEAR GLASS */
+        .navbar {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(25px);
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            margin: 1rem 2rem 2rem;
+            z-index: 100;
+            color: white;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e6dfe6, #ceeee8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: white;
+        }
+
+        .nav-item:hover {
+            background: rgba(78,205,196,0.3);
+            color: #4ecdc4;
+        }
+
+        /* MAIN FORM - HEAVY BLUR */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .form-card {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78,205,196,0.2);
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* DATE FIELD */
+        .form-group.date-group {
+            grid-column: span 2;
+        }
+
+        /* VALUES SECTION - BLUR */
+        .values-section {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .values-section h3 {
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* GENERATE BUTTON */
+        .generate-btn {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, hsl(332, 81%, 58%), #a525fa);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            box-shadow: 0 20px 40px rgba(78,205,196,0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(78,205,196,0.6);
+        }
+
+        /* ERROR MESSAGE */
+        .error-msg {
+            background: rgba(220,53,69,0.2);
+            border: 1px solid rgba(220,53,69,0.5);
+            color: #ff6b6b;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .form-grid, .values-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-menu { display: none; }
+            .form-card { padding: 2rem 1.5rem; margin: 1rem; }
+            .navbar { margin: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" id="navLogo">
+                <i class="fas fa-file-medical"></i> MediRx
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item" onclick="goHome()">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </li>
+                <li class="nav-item" onclick="goTo('list.html')">
+                    <i class="fas fa-history"></i> History
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div id="errorMsg" class="error-msg"></div>
+        
+        <!-- FORM -->
+        <div class="form-card">
+            <h1 class="form-title" id="formHeaderTitle">
+                <i class="fas fa-file-prescription"></i>
+                Generate Prescription
+            </h1>
+            
+            <form id="prescriptionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> MRD <span style="color:#ff6b6b;">*</span></label>
+                        <!-- Moved MRD up to follow structural lookups smoothly -->
+                        <input type="text" id="patientMrd" placeholder="Enter unique MRD number" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Patient Name</label>
+                        <input type="text" id="patientName" placeholder="Enter patient full name" required>
+                    </div>
+                    <div class="form-group date-group">
+                        <label><i class="fas fa-calendar"></i> Date of Visit</label>
+                        <input type="date" id="visitDate" required>
+                    </div>
+                </div>
+
+                <div class="values-section">
+                    <h3>
+                        <i class="fas fa-chart-line"></i> Lab Values
+                    </h3>
+                    <div class="values-grid">
+                        <div class="form-group">
+                            <label>HC (Homocysteine)</label>
+                            <input type="number" id="hcValue" step="0.1" placeholder="e.g. 12.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Fe (Iron)</label>
+                            <input type="number" id="feValue" step="0.1" placeholder="e.g. 45.2">
+                        </div>
+                        <div class="form-group">
+                            <label>Vit D (Vitamin D)</label>
+                            <input type="number" id="vitdValue" step="0.1" placeholder="e.g. 25.8">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="generate-btn" id="submitBtn">
+                    <i class="fas fa-print"></i>
+                    <span id="submitBtnText">Generate Prescription</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Default execution: Set today's date
+        document.getElementById('visitDate').valueAsDate = new Date();
+
+        // Check for edit initialization parameters on page execution
+        let editIndex = localStorage.getItem('editPrescriptionIndex');
+        let prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+        
+        if (editIndex !== null && prescriptions[editIndex]) {
+            const targetData = prescriptions[editIndex];
+            enableEditMode(targetData);
+        }
+
+        // Helper function to handle populating form fields smoothly
+        function populateFormFields(data) {
+            document.getElementById('patientName').value = data.patientName || data.name || '';
+            document.getElementById('patientMrd').value = data.patientMrd || data.mrd || '';
+            
+            if (data.visitDate || data.date) {
+                const rawDate = data.visitDate || data.date;
+                document.getElementById('visitDate').value = rawDate.split('T')[0];
+            } else {
+                document.getElementById('visitDate').valueAsDate = new Date();
+            }
+            
+            document.getElementById('hcValue').value = (data.hcValue !== 'N/A' && data.hcValue) ? data.hcValue : (data.hc !== 'N/A' && data.hc ? data.hc : '');
+            document.getElementById('feValue').value = (data.feValue !== 'N/A' && data.feValue) ? data.feValue : (data.fe !== 'N/A' && data.fe ? data.fe : '');
+            document.getElementById('vitdValue').value = (data.vitdValue !== 'N/A' && data.vitdValue) ? data.vitdValue : (data.vitd !== 'N/A' && data.vitd ? data.vitd : '');
+        }
+
+        function enableEditMode(data) {
+            document.getElementById('navLogo').innerHTML = '<i class="fas fa-edit"></i> Edit Prescription';
+            document.getElementById('formHeaderTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Prescription';
+            document.getElementById('submitBtnText').textContent = 'Update & Save Changes';
+            populateFormFields(data);
+        }
+
+        // LIVE MRD LOOKUP LISTENER
+        document.getElementById('patientMrd').addEventListener('change', function(e) {
+            const inputMrd = e.target.value.trim();
+            if (!inputMrd) return;
+
+            // Fetch current state array matrix
+            prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+
+            // Check if any matching entry matches this unique value 
+            const existingRecordIndex = prescriptions.findIndex((p, idx) => {
+                // Ignore matching yourself if actively editing
+                if (editIndex !== null && String(idx) === String(editIndex)) return false;
+                const currentMrd = p.patientMrd || p.mrd;
+                return String(currentMrd).trim() === String(inputMrd);
+            });
+
+            if (existingRecordIndex !== -1) {
+                // Alert prompt trigger
+                alert("Prescription already exists.");
+
+                // Automatically switch window parameters to update target item index slot instead of inserting new entry
+                editIndex = existingRecordIndex;
+                localStorage.setItem('editPrescriptionIndex', editIndex);
+
+                // Populate matching parameters right over the UI fields
+                enableEditMode(prescriptions[existingRecordIndex]);
+            }
+        });
+
+        // SAVE, OVERWRITE & REDIRECT LOGIC
+        document.getElementById('prescriptionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const mrd = document.getElementById('patientMrd').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+            
+            // SECONDARY GUARD SAFETY CHECK
+            const mrdExists = prescriptions.some((p, idx) => {
+                if (editIndex !== null && String(idx) === String(editIndex)) return false;
+                const currentMrd = p.patientMrd || p.mrd;
+                return String(currentMrd).trim() === String(mrd);
+            });
+            
+            if (mrdExists) {
+                alert("Prescription already exists.");
+                return;
+            }
+            
+            errorMsg.style.display = 'none';
+            
+            const formData = {
+                patientName: document.getElementById('patientName').value,
+                name: document.getElementById('patientName').value,
+                patientMrd: mrd,
+                mrd: mrd,
+                visitDate: document.getElementById('visitDate').value,
+                date: document.getElementById('visitDate').value,
+                hcValue: document.getElementById('hcValue').value || 'N/A',
+                hc: document.getElementById('hcValue').value || 'N/A',
+                feValue: document.getElementById('feValue').value || 'N/A',
+                fe: document.getElementById('feValue').value || 'N/A',
+                vitdValue: document.getElementById('vitdValue').value || 'N/A',
+                vitd: document.getElementById('vitdValue').value || 'N/A',
+                timestamp: new Date().toISOString()
+            };
+
+            // Maintain optional objects such as medicine items array tables across updates
+            if (editIndex !== null && prescriptions[editIndex]) {
+                if (prescriptions[editIndex].medicines) {
+                    formData.medicines = prescriptions[editIndex].medicines;
+                }
+            }
+            
+            localStorage.setItem('currentPrescription', JSON.stringify(formData));
+            
+            if (editIndex !== null) {
+                // Safely overwrite target slot matrix position
+                prescriptions[parseInt(editIndex)] = formData;
+                localStorage.removeItem('editPrescriptionIndex'); 
+            } else {
+                prescriptions.unshift(formData);
+            }
+            
+            localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
+            window.location.href = 'view.html';
+        });
+
+        function goHome() {
+            localStorage.removeItem('editPrescriptionIndex');
+            const userType = localStorage.getItem('userType') || 'user';
+            window.location.href = userType === 'admin' ? 'admin.html' : 'user.html';
+        }
+
+        function goTo(page) {
+            localStorage.removeItem('editPrescriptionIndex');
+            window.location.href = page;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPrescript - User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7b169a 0%, #701a75 40%, #fbcfe8 100%);
+            background-size: cover;
+            background-attachment: fixed;
+            line-height: 1.6;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbcfe8;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #701a75;
+            color: white;
+            box-shadow: 0 4px 15px rgba(112, 26, 117, 0.4);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fbcfe8;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #f9b7fa;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #701a75;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #fbcfe8;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .stat-label {
+            color: #410f5f;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* ACTIONS */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 30px rgba(112, 26, 117, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            color: #fbcfe8;
+            margin-bottom: 1rem;
+        }
+
+        .action-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ede2ee;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            color: #3d0a64;
+            font-size: 0.95rem;
+            font-weight:bold ;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #2e1065;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            .mobile-menu { display: block; }
+            .welcome-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-pills" style="margin-right: 0.5rem;"></i>
+                MediRx
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="goTo('user.html')">
+                    <i class="fas fa-home"></i> Home
+                </li>
+                <li class="nav-item" onclick="goTo('generate.html')">
+                    <i class="fas fa-plus"></i> Generate
+                </li>
+                <li class="nav-item" onclick="goTo('list.html')">
+                    <i class="fas fa-history"></i> History
+                </li>
+                <li class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="main-content">
+        <section class="welcome-section">
+            <h1 class="welcome-title">Welcome Back, Doctor!</h1>
+            <p class="welcome-subtitle">Quickly generate prescriptions and manage patient history</p>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-file-medical"></i></div>
+                <div class="stat-number">24</div>
+                <div class="stat-label">Total Prescriptions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number">15</div>
+                <div class="stat-label">Patients</div>
+            </div>
+        </section>
+
+        <section class="actions-grid">
+            <div class="action-card" onclick="goTo('generate.html')">
+                <div class="action-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="action-title">New Prescription</div>
+                <p>Generate prescription for new patient</p>
+            </div>
+            <div class="action-card" onclick="goTo('list.html')">
+                <div class="action-icon"><i class="fas fa-list"></i></div>
+                <div class="action-title">Prescription History</div>
+                <p>View, edit and print past prescriptions</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Navigation
+        function goTo(page) {
+            window.location.href = page;
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.nav-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Set active nav
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const activeItem = document.querySelector('.nav-item.active');
+                if (activeItem) activeItem.classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+<footer><marquee behavior="slide" direction="left" scrollamount="12" style="color: rgb(82, 8, 63); font-size: 20px;">
+    <b>✨Welcome to Medix Portal — 🩺 Your health, simplified — track, manage, and care with Medix 📈✨....</b>
+</marquee></footer>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPrescript - History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #2e1065 0%, #701a75 40%, #fbcfe8 100%); 
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh; 
+            padding: 1rem;
+            line-height: 1.6;
+            color: #111111;
+        }
+        
+        /* NAVBAR WITH BLUR EFFECT */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 1rem 2rem; 
+            border-radius: 15px; 
+            margin-bottom: 2rem; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+        
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: #be185d; }
+        
+        .main-content { max-width: 900px; margin: 0 auto; padding: 0 1rem; width: 100%; }
+        
+        /* CONTAINER BLUR CARDS (GLASSMORPHISM) */
+        .blur-card {
+            background: rgba(255, 255, 255, 0.82); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .page-header {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .page-title { 
+            font-size: 1.8rem; 
+            color: #1e1b4b; 
+            font-weight: 700;
+            margin-bottom: 1rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 1rem; 
+            margin: 0 auto; 
+        }
+
+        .search-box { 
+            padding: 0.8rem 1.5rem; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            width: 100%; 
+            max-width: 400px; 
+            background: rgba(255, 255, 255, 0.9); 
+            font-family: 'Poppins', sans-serif;
+        }
+        .search-box:focus { outline: none; border-color: #db2777; }
+
+        .prescriptions-container {
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .list-header {
+            background: linear-gradient(135deg, #be185d, #701a75);
+            color: white;
+            padding: 1.5rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* PRESCRIPTION ITEM LAYOUT */
+        .prescription-item {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prescription-item:hover { 
+            background: rgba(219, 39, 119, 0.08); 
+        }
+
+        .prescription-info h3 { 
+            color: #1e1b4b; 
+            font-weight: 700;
+            margin-bottom: 0.5rem; 
+        }
+
+        .prescription-meta { 
+            color: #334155; 
+            font-weight: 500;
+            font-size: 0.9rem; 
+            display: flex; 
+            gap: 1.2rem; 
+            flex-wrap: wrap; 
+        }
+
+        .prescription-meta i {
+            color: #db2777; 
+        }
+        
+        /* ACTION CONTROL BUTTONS */
+        .prescription-actions { display: flex; gap: 0.6rem; }
+        .btn { padding: 0.6rem 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; text-decoration: none; }
+        
+        .btn-view { background: #701a75; color: white; }
+        .btn-view:hover { background: #2e1065; box-shadow: 0 4px 12px rgba(112,26,117,0.3); }
+        
+        .btn-edit { background: #d97706; color: white; } 
+        .btn-edit:hover { background: #b45309; box-shadow: 0 4px 12px rgba(217,119,6,0.3); }
+
+        .btn-print { background: #0284c7; color: white; }
+        .btn-print:hover { background: #0369a1; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
+        
+        .btn-delete { background: #e11d48; color: white; }
+        .btn-delete:hover { background: #be123c; box-shadow: 0 4px 12px rgba(225,29,72,0.3); }
+
+        .no-prescriptions { text-align: center; padding: 4rem 2rem; color: #475569; }
+        .no-prescriptions i { font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem; display: block; }
+
+        .btn-new { 
+            background: #db2777 !important; 
+            color: white !important; 
+            padding: 0.6rem 1.5rem !important; 
+            font-size: 0.95rem !important; 
+            border-radius: 20px !important; 
+            display: inline-flex !important; 
+            box-shadow: 0 4px 12px rgba(219,39,119,0.2);
+        }
+        .btn-new:hover { background: #be185d !important; transform: translateY(-1px); }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.85);
+            color: #2e1065;
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .btn-back:hover {
+            background: #2e1065;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .prescription-item { flex-direction: column; gap: 1rem; text-align: center; }
+            .prescription-actions { justify-content: center; flex-wrap: wrap; }
+            .navbar { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Modified: Changed href to "#" and added an id for dynamic routing -->
+            <a href="#" id="dashboardBtn" class="btn-back">
+                <i class="fas fa-arrow-left"></i> 
+            </a>
+            <a href="generate.html" class="btn btn-new" onclick="clearEditState()">
+                <i class="fas fa-plus"></i> New Prescription
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN BODY CONTROLS -->
+    <div class="main-content">
+        <div class="page-header blur-card">
+            <div class="page-title">
+                <i class="fas fa-history" style="color: #db2777;"></i> Prescription History
+            </div>
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search patient name or MRD...">
+        </div>
+
+        <div class="prescriptions-container blur-card">
+            <div class="list-header">
+                <span id="totalCount">0</span> Prescriptions Found
+            </div>
+            <div id="prescriptionsList"></div>
+        </div>
+    </div>
+
+    <script>
+        let allPrescriptions = [];
+
+        // Added: Function to evaluate the logged-in user role and update the link
+        function setupDashboardLink() {
+            const role = localStorage.getItem('userRole'); // Expects 'admin' or 'user'
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            
+            if (role === 'admin') {
+                dashboardBtn.href = 'admin.html';
+            } else {
+                dashboardBtn.href = 'user.html'; // Default fallback for patient/user logs
+            }
+        }
+
+        function loadPrescriptions() {
+            allPrescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+            renderPrescriptions('');
+        }
+
+        function renderPrescriptions(filter = '') {
+            const list = document.getElementById('prescriptionsList');
+            const filtered = allPrescriptions.filter(p => 
+                (p.name || '').toLowerCase().includes(filter.toLowerCase()) ||
+                (p.mrd || '').toLowerCase().includes(filter.toLowerCase())
+            );
+
+            document.getElementById('totalCount').textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div class="no-prescriptions">
+                        <i class="fas fa-file-medical"></i>
+                        <h3>No Prescriptions Found</h3>
+                        <p style="margin-top:0.5rem;"><a href="generate.html" onclick="clearEditState()" style="color: #db2777; font-weight: 600; text-decoration:none;">Create New Entry →</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filtered.map((prescription, globalIndex) => {
+                const date = new Date(prescription.date).toLocaleDateString('en-GB');
+                const medsCount = prescription.medicines ? prescription.medicines.length : 0;
+                
+                return `
+                    <div class="prescription-item">
+                        <div class="prescription-info">
+                            <h3>${prescription.name || 'Unnamed'}</h3>
+                            <div class="prescription-meta">
+                                <span><i class="fas fa-id-card"></i> ${prescription.mrd || 'N/A'}</span>
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                                <span><i class="fas fa-pills"></i> ${medsCount} medicines</span>
+                                ${prescription.hc ? `<span><i class="fas fa-tint"></i> HC: ${prescription.hc}</span>` : ''}
+                                ${prescription.fe ? `<span><i class="fas fa-chart-line"></i> Fe: ${prescription.fe}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="prescription-actions">
+                            <a href="#" class="btn btn-view" onclick="viewPrescription(${globalIndex}); return false;">
+                                <i class="fas fa-eye"></i> View A5
+                            </a>
+                            <a href="#" class="btn btn-edit" onclick="editPrescription(${globalIndex}); return false;">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="#" class="btn btn-print" onclick="printPrescription(${globalIndex}); return false;">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                            <button class="btn btn-delete" onclick="deletePrescription(${globalIndex}); return false;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewPrescription(index) {
+            localStorage.setItem('currentPrescriptionIndex', index);
+            window.location.href = 'view.html';
+        }
+
+        function printPrescription(index) {
+            localStorage.setItem('currentPrescriptionIndex', index);
+            window.open('view.html', '_blank');
+        }
+
+        function editPrescription(index) {
+            localStorage.setItem('editPrescriptionIndex', index);
+            window.location.href = 'generate.html';
+        }
+
+        function clearEditState() {
+            localStorage.removeItem('editPrescriptionIndex');
+        }
+
+        function deletePrescription(index) {
+            if (confirm(`Delete "${allPrescriptions[index].name}"?`)) {
+                allPrescriptions.splice(index, 1);
+                localStorage.setItem('prescriptions', JSON.stringify(allPrescriptions));
+                loadPrescriptions();
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            renderPrescriptions(e.target.value);
+        });
+
+        // Initialize setup on page display
+        setupDashboardLink();
+        loadPrescriptions();
+    </script>
+</body>
+</html>
