@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPrescript</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            background: linear-gradient(135deg, rgba(215, 10, 247, 0.182) 0%, rgba(248, 155, 245, 0.124) 100%);
+        }
+
+        /* WINDOWS LOCK SCREEN BACKGROUND - CHANGE THIS IMAGE */
+        .lock-screen-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.5) contrast(1.1);
+            transition: filter 0.4s ease;
+        }
+
+        /* WINDOWS AURORA OVERLAY */
+        .aurora-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120,119,198,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,119,198,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120,219,255,0.15) 0%, transparent 50%);
+            z-index: 2;
+            animation: windows-aurora 25s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes windows-aurora {
+            0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+            33% { opacity: 0.8; transform: scale(1.05) rotate(120deg); }
+            66% { opacity: 0.7; transform: scale(1.1) rotate(240deg); }
+        }
+
+        /* Main Content - Windows Center Panel */
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            max-width: 500px;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+
+        .content:hover {
+            transform: translate(-50%, -55%) scale(1.02);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.7);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Windows Clock Style */
+        .windows-clock {
+            font-size: clamp(3rem, 11vw, 6rem);
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            opacity: 0.95;
+        }
+
+        /* Logo - Windows Style */
+        .logo {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            letter-spacing: 1px;
+        }
+
+        /* Title & Subtitle */
+        .title {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            opacity: 0.95;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            opacity: 0.85;
+            line-height: 1.5;
+            max-width: 400px;
+            margin: 0 auto;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        /* Windows Power Button */
+        .power-circle {
+            position: absolute;
+            bottom: 3rem;
+            right: 3rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+
+        .power-circle:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        /* Click Hint */
+        .click-hint {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            opacity: 0.7;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .arrow {
+            display: inline-block;
+            animation: bounce 2s infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden { opacity: 0; pointer-events: none; }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content { padding: 2rem 1.5rem; margin: 1rem; }
+            .windows-clock { font-size: 3.5rem; }
+            .logo { font-size: 2rem; }
+            .power-circle { bottom: 2rem; right: 2rem; width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- CHANGE YOUR BACKGROUND IMAGE HERE -->
+    <img src="img2.jpg" alt="Windows Lock Screen" class="lock-screen-bg">
+
+    <!-- Windows Aurora Effect -->
+    <div class="aurora-overlay"></div>
+
+    <!-- Windows Lock Screen Content -->
+    <div class="content" id="content">
+        <div class="windows-clock" id="clock"></div>
+        <div class="logo"> </div>
+        <div class="title">Welcome to MediPrescript!!</div>
+        <div class="subtitle"> </div>
+        <div class="click-hint">
+            Click to enter 
+            <span class="arrow">→</span>
+        </div>
+    </div>
+
+    <!-- Windows Power Button -->
+    
+
+    <script>
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            const date = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('clock').textContent = time;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Hide loading
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loading').classList.add('hidden'), 1500);
+        });
+
+        const content = document.getElementById('content');
+        
+        // Hover Effects
+        content.addEventListener('mouseenter', () => {
+            document.querySelector('.lock-screen-bg').style.filter = 'brightness(0.7) contrast(1.2)';
+        });
+
+        content.addEventListener('mouseleave', () => {
+            document.querySelector('.lock-screen-bg').style.filter = 'brightness(0.5) contrast(1.1)';
+        });
+
+        // Click Effect
+        content.addEventListener('click', (e) => {
+            createRipple(e);
+            setTimeout(() => {
+                window.location.href = 'user.html';
+            }, 500);
+        });
+
+        function createRipple(event) {
+            const ripple = document.createElement('span');
+            const rect = content.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            content.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 800);
+        }
+
+        // Prevent right click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
